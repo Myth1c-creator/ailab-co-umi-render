@@ -27,8 +27,8 @@ on:
         description: "frames of the 3D composition"
         default: "1289"
       hook_step:
-        description: "3D frames per job"
-        default: "30"
+        description: "3D frames per job (65 = 20 jobs: the public repo starts at most 20 jobs of a matrix)"
+        default: "65"
       hook_comp:
         default: "Film3D"
       hook_run:
@@ -157,6 +157,9 @@ jobs:
           gh release download "$SRC" -p 'hook-*.tar.gpg' -D dl -R "$GITHUB_REPOSITORY"
           for f in dl/*.tar.gpg; do gpg --batch --quiet --pinentry-mode loopback --passphrase-fd 3 -d "$f" 3<<<"$ASSETS_KEY" | tar -x -C public/hook; done
           rm -rf dl
+          n=$(ls public/hook | grep -c jpg); echo "$n 3D frames"
+          # a missing hook job must stop the film here, not render a still picture (run 42673621240 had 20 of 43 chunks)
+          [ -n "${{ inputs.upto }}" ] || [ "$n" -ge "${{ inputs.hook_frames }}" ] || { echo "missing 3D frames: $n of ${{ inputs.hook_frames }}"; exit 1; }
       - name: Cache ffmpeg
         id: ff
         uses: actions/cache@v4
