@@ -89,6 +89,7 @@ export const T = {
   comfy: W("Comfy"), // 800  13.333 "Comfy" 13.33
   pill: Bt(19), //      821  13.683 beat: "26 GRAFŮ" pops out of the counts ("na jeden klik" 13.86)
   comfyPunch: K(19), // 844  14.067 kick
+  comfyDrive: Bt(20), // 864  14.400 beat: punch on the Comfy board while it drives to the glitch (v2 held 0.67 s here)
   glitch: K(20), //     894  14.900 kick: GLITCH to the Supercomputer board
   sup: W("Supercomputer"), // 904 15.067 "Supercomputer" 15.06
   supPunch: Bt(21), //  906  15.100 beat: the word lands

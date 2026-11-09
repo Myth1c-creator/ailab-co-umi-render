@@ -445,7 +445,10 @@ export function buildBoardsB(M: Media, SR: Record<Key, Src>): World {
       const a = t - S.macro;
       const B = BOARDS.comfy;
       const land = lerp(1.4, 1, outCubic(clamp(a / (12 / 60))));
-      showBoard(bC, base, B.x + 20 * Math.sin(t * 0.9), B.y, B.w * land * (1 + 0.025 * a) * (1 + punchK(t, S.comfyPunch, 0.03)), [0.22 + 0.03 * Math.sin(t * 1.1), -0.16 + 0.05 * Math.sin(t * 1.3), 0.01]);
+      // after the kick the board drives towards the glitch (slide, grow, turn) and punches on the beat between,
+      // so the 14.07–14.90 stretch never holds (v2: 0.67 s hold at 14.22)
+      const drive = inCubic((t - S.comfyPunch) / (S.glitch - S.comfyPunch));
+      showBoard(bC, base, B.x + 20 * Math.sin(t * 0.9) - 90 * drive, B.y, B.w * land * (1 + 0.025 * a) * (1 + punchK(t, S.comfyPunch, 0.03) + punchK(t, S.comfyDrive, 0.04) + 0.12 * drive), [0.22 + 0.03 * Math.sin(t * 1.1), -0.16 + 0.05 * Math.sin(t * 1.3) + 0.14 * drive, 0.01 + 0.04 * drive]);
       gGlow.mat.opacity = t >= S.pill - 0.12 ? 0.6 + 0.8 * pulse(t, S.pill, 5) : 0;
     }
     showWord(wC, base, t, S.comfy, S.glitch, 540, WORDS.comfy.y, WORDS.comfy.w, { punch: [S.pill, S.comfyPunch] });
